@@ -14,6 +14,16 @@ class Settings(BaseSettings):
     # Порог актуальности данных (дней) — раздел 7 ТЗ
     data_freshness_days: int = 30
 
+    # URL задеплоенного фронтенда (для CORS в продакшене). localhost:5173
+    # для локальной разработки разрешён всегда.
+    frontend_origin: str | None = None
+
+    # Пароли для seed-пользователей — переопределяются на деплое,
+    # чтобы не публиковать реальные учётные данные в открытом репозитории.
+    seed_admin_password: str = "admin123"
+    seed_head_password: str = "head123"
+    seed_director_password: str = "director123"
+
     class Config:
         env_file = ".env"
 

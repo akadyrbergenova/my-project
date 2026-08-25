@@ -1,4 +1,6 @@
-const BASE_URL = "/api";
+// В деплое (Render) задаётся VITE_API_URL с полным адресом backend.
+// Локально используется прокси /api из vite.config.js.
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 function getToken() {
   return localStorage.getItem("token");

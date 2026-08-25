@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import models
+from .config import settings
 from .database import Base, engine
 from .routers import auth_router, banks, offers
 
@@ -12,9 +13,13 @@ app = FastAPI(
     version="0.1.0-mvp",
 )
 
+allow_origins = ["http://localhost:5173"]
+if settings.frontend_origin:
+    allow_origins.append(settings.frontend_origin)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
