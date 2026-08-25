@@ -45,11 +45,7 @@ def upsert_offer(
 
 
 @router.get("/history", response_model=List[schemas.RateHistoryOut])
-def get_history(
-    bank_id: int,
-    db: Session = Depends(get_db),
-    _current_user=Depends(auth.get_current_user),
-):
+def get_history(bank_id: int, db: Session = Depends(get_db)):
     bank = db.query(models.Bank).filter(models.Bank.id == bank_id).first()
     if not bank:
         raise HTTPException(status_code=404, detail="Банк не найден")

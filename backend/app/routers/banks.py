@@ -43,7 +43,6 @@ def list_banks(
     sort_by: Literal["name", "rate_min", "amount_min", "term_min_months", "updated_at"] = "name",
     order: Literal["asc", "desc"] = "asc",
     db: Session = Depends(get_db),
-    _current_user=Depends(auth.get_current_user),
 ):
     query = db.query(models.Bank)
     if only_active:
@@ -81,9 +80,7 @@ def list_banks(
 
 
 @router.get("/{bank_id}", response_model=schemas.BankWithOfferOut)
-def get_bank(
-    bank_id: int, db: Session = Depends(get_db), _current_user=Depends(auth.get_current_user)
-):
+def get_bank(bank_id: int, db: Session = Depends(get_db)):
     bank = db.query(models.Bank).filter(models.Bank.id == bank_id).first()
     if not bank:
         raise HTTPException(status_code=404, detail="Банк не найден")

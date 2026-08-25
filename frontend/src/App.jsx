@@ -31,44 +31,30 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      {isAuthenticated() && (
-        <header className="app-header">
-          <div className="app-header__brand">Ставки БВУ РК — залоговые кредиты МСБ</div>
-          <nav className="app-header__nav">
-            <Link to="/">Дашборд</Link>
-            {user?.role === "admin" && <Link to="/admin">Администрирование</Link>}
-          </nav>
-          <div className="app-header__user">
-            {user && (
-              <>
-                <span>
-                  {user.full_name} ({roleLabel(user.role)})
-                </span>
-                <button onClick={handleLogout}>Выйти</button>
-              </>
-            )}
-          </div>
-        </header>
-      )}
+      <header className="app-header">
+        <div className="app-header__brand">Ставки БВУ РК — залоговые кредиты МСБ</div>
+        <nav className="app-header__nav">
+          <Link to="/">Дашборд</Link>
+          {user?.role === "admin" && <Link to="/admin">Администрирование</Link>}
+        </nav>
+        <div className="app-header__user">
+          {user ? (
+            <>
+              <span>
+                {user.full_name} ({roleLabel(user.role)})
+              </span>
+              <button onClick={handleLogout}>Выйти</button>
+            </>
+          ) : (
+            <Link to="/login">Вход для оператора данных</Link>
+          )}
+        </div>
+      </header>
       <main className="app-main">
         <Routes>
           <Route path="/login" element={<Login onLoggedIn={() => me().then(setUser)} />} />
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <Dashboard />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/banks/:id"
-            element={
-              <RequireAuth>
-                <BankCard />
-              </RequireAuth>
-            }
-          />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/banks/:id" element={<BankCard />} />
           <Route
             path="/admin"
             element={
