@@ -1,0 +1,18 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+backend/rates.db
+backend/.env
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code local state
+.claude/scheduled_tasks.lock
