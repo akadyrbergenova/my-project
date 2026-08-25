@@ -1,6 +1,12 @@
+import { demoGetBank, demoGetHistory, demoListBanks } from "../demoData.js";
+
 // В деплое (Render) задаётся VITE_API_URL с полным адресом backend.
 // Локально используется прокси /api из vite.config.js.
 const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
+// DEMO_MODE — статическая сборка для GitHub Pages, без backend:
+// данные берутся из demoData.js, вход/админка недоступны.
+export const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === "true";
 
 function getToken() {
   return localStorage.getItem("token");
@@ -34,6 +40,11 @@ async function request(path, { method = "GET", body, isForm = false } = {}) {
 }
 
 export async function login(username, password) {
+  if (DEMO_MODE) {
+    throw new Error(
+      "Это статическое демо на GitHub Pages без backend — вход и редактирование данных недоступны. См. README о полном деплое."
+    );
+  }
   const form = new URLSearchParams();
   form.append("username", username);
   form.append("password", password);
@@ -47,19 +58,20 @@ export function logout() {
 }
 
 export function isAuthenticated() {
-  return Boolean(getToken());
+  return !DEMO_MODE && Boolean(getToken());
 }
 
 export const me = () => request("/auth/me");
 
 export const listBanks = (params = {}) => {
+  if (DEMO_MODE) return demoListBanks(params);
   const query = new URLSearchParams(
     Object.entries(params).filter(([, v]) => v !== undefined && v !== "")
   ).toString();
   return request(`/banks${query ? `?${query}` : ""}`);
 };
 
-export const getBank = (id) => request(`/banks/${id}`);
+export const getBank = (id) => (DEMO_MODE ? demoGetBank(id) : request(`/banks/${id}`));
 export const createBank = (payload) => request(`/banks`, { method: "POST", body: payload });
 export const updateBank = (id, payload) => request(`/banks/${id}`, { method: "PATCH", body: payload });
 export const deleteBank = (id) => request(`/banks/${id}`, { method: "DELETE" });
@@ -67,7 +79,7 @@ export const deleteBank = (id) => request(`/banks/${id}`, { method: "DELETE" });
 export const upsertOffer = (bankId, payload) =>
   request(`/banks/${bankId}/offer`, { method: "PUT", body: payload });
 
-export const getHistory = (bankId) => request(`/banks/${bankId}/history`);
+export const getHistory = (bankId) => (DEMO_MODE ? demoGetHistory(bankId) : request(`/banks/${bankId}/history`));
 
 export const listParsingLogs = (bankId) => request(`/banks/${bankId}/parsing-logs`);
 export const addParsingLog = (bankId, status, message) =>

@@ -299,6 +299,25 @@ button:hover {
   margin-top: 16px;
 }
 
+/* Demo mode */
+
+.demo-banner {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  padding: 10px 24px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.demo-banner--page {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 16px;
+  max-width: 560px;
+}
+
 /* Admin */
 
 .admin-page section {
